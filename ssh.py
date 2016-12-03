@@ -15,6 +15,9 @@ current = datetime.strftime(datetime.now(), "%Y-%m-%d")
 def auth():
 	user = raw_input("Username: ")
 	passwd = getpass.getpass("Password: ")
+	if len(user) == 0 or len(passwd) == 0:
+		print "login or password is empty"
+		sys.exit()
 	return user,passwd
 
 #connect ssh
