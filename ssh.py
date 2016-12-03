@@ -4,6 +4,7 @@ import sys
 import time
 import os
 import getpass
+import socket
 from datetime import datetime
 
 #parameter
@@ -19,6 +20,15 @@ def auth():
 		print "login or password is empty"
 		sys.exit()
 	return user,passwd
+
+#Validate ip address in file 'ip'
+def validate_ip(ip):
+	try:
+		socket.inet_aton(ip)
+		return True
+	except:
+		print ip
+		return False
 
 #connect ssh
 def connect_ssh(host,login,password):
@@ -57,18 +67,22 @@ def Main():
 	user,passwd = auth()
 	if os.path.exists(path + '/ip'):
 		file = open('ip','r')
-		for line in file.readlines():	
-			print "------------------"
-			print "Connect to host %s" % line
-			ssh = connect_ssh(line,user,passwd)
-			print "Execute command"
-			output = console_command(ssh)
-			print "Create result file"
-			line = line.strip('\n')
-			create_file(output,line)
-			ssh.close()
-			print "SSH socket close"
-			print "------------------"
+		for line in file.readlines():
+			if validate_ip(line):
+				print "------------------"
+				print "Connect to host %s" % line
+				ssh = connect_ssh(line,user,passwd)
+				print "Execute command"
+				output = console_command(ssh)
+				print "Create result file"
+				line = line.strip('\n')
+				create_file(output,line)
+				ssh.close()
+				print "SSH socket close"
+				print "------------------"
+			else:
+				print "invalid address"
+				print "------------------"
 	else:
 		print "--------------------"
 		print "File ip does not exist"
