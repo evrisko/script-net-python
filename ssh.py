@@ -5,6 +5,7 @@ import time
 import os
 import getpass
 import socket
+import signal
 from datetime import datetime
 
 #parameter
@@ -29,6 +30,11 @@ def validate_ip(ip):
 	except:
 		print ip
 		return False
+
+#ctrl+c
+def handler(signal, frame):
+        print "exit"
+        sys.exit()
 
 #connect ssh
 def connect_ssh(host,login,password):
@@ -64,6 +70,7 @@ def create_file(buffer,host):
 		file.close()
 
 def Main():
+	signal.signal(signal.SIGINT, handler)
 	user,passwd = auth()
 	if os.path.exists(path + '/ip'):
 		file = open('ip','r')
