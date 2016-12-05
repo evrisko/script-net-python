@@ -12,7 +12,6 @@ from datetime import datetime
 paramiko.util.log_to_file('ssh.log')
 path = os.getcwd()
 current = datetime.strftime(datetime.now(), "%Y-%m-%d")
-x = chr(35)
 
 #auth
 def auth():
@@ -61,32 +60,14 @@ def console_command(ssh):
 #create result file
 def create_file(buffer,host):
 	if os.path.exists(path + '/' + host):
-		tmp = open('tmp','a')
-		tmp.write(buffer)
-		tmp.close()
-		tmp = open('tmp')
-                for line in tmp.readlines():
-			syph = line.strip('\n')
-			right = syph.find(x)
-			if right < 0:
-				file = open(host+ '/env-' + current,'a')
-				file.write(syph)
-				file.close()
-		os.remove('tmp')
+		file = open(host+ '/env-' + current,'a')
+		file.write(buffer)
+		file.close()
 	else:
 		os.mkdir(path + '/' +  host)
-		tmp = open('tmp','a')
-		tmp.write(buffer)
-		tmp.close()
-		tmp = open('tmp')
-		for line in tmp.readlines():
-			syph = line.strip('\n')
-			right = syph.find(x)
-			if right < 0:
-				file = open(host+ '/env-' + current,'a')
-				file.write(syph)
-				file.close()
-		os.remove('tmp')
+		file = open(host+ '/env-' + current,'a')
+		file.write(buffer)
+		file.close()
 
 def Main():
 	signal.signal(signal.SIGINT, handler)
