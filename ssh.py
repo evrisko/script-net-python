@@ -49,13 +49,15 @@ def connect_ssh(host,login,password):
 
 #command in console device
 def console_command(ssh):
+	file = open('command','r')
 	console = ssh.invoke_shell()
-	output = console.send("terminal length 0\n")
-	output = console.send("sh env all\n")
-#	output = console.send("sh int desc\n")
-	time.sleep(1)
+	for line in file.readlines():
+		output = console.send(line)
+	time.sleep(5)
 	output = console.recv(50000)
+	file.close()
 	return output
+
 
 #create result file
 def create_file(buffer,host):
